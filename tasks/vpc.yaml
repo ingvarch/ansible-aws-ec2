@@ -1,0 +1,27 @@
+- name: create vpc
+  local_action:
+    module: ec2_vpc
+    state: present
+    cidr_block: 10.220.0.0/16
+    resource_tags: { "Name":"prod_vpc" }
+    subnets:
+      - cidr: 10.220.20.0/24
+        az: "{{ az1|default('us-east-1a') }}"
+        resource_tags: { "Name":"web_subnet", "Type" : "Web" }
+      - cidr: 10.220.30.0/24
+        az: "{{ az2|default('us-east-1b') }}"
+        resource_tags: { "Name":"db_subnet", "Type" : "Web" }
+    internet_gateway: True
+    route_tables:
+      - subnets:
+          - 10.220.20.0/24
+          - 10.220.30.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: "{{ gw|default('igw') }}"
+
+    region: "{{ region|default('us-east-1') }}"
+  register: vpc_data
+
+- name: debug vpc
+  debug: "msg='{{ vpc_data }}'"

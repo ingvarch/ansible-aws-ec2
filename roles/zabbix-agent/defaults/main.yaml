@@ -1,0 +1,32 @@
+zabbix_release_rpm_url: "http://repo.zabbix.com/zabbix/2.4/rhel/6/x86_64/zabbix-release-2.4-1.el6.noarch.rpm"
+
+zabbix_agent_Alias: ~
+zabbix_agent_AllowRoot: "0"
+zabbix_agent_BufferSend: "5"
+zabbix_agent_BufferSize: "100"
+zabbix_agent_DebugLevel: "3"
+zabbix_agent_EnableRemoteCommands: "0"
+zabbix_agent_HostMetadata: ~
+zabbix_agent_HostMetadataItem: ~
+zabbix_agent_Hostname: "Zabbix server"
+zabbix_agent_HostnameItem: "system.hostname"
+zabbix_agent_Include:
+  - "/etc/zabbix/zabbix_agentd.d/"
+zabbix_agent_ListenIP: "0.0.0.0"
+zabbix_agent_ListenPort: "10050"
+zabbix_agent_LoadModule: ~
+zabbix_agent_LoadModulePath: "${libdir}/modules"
+zabbix_agent_LogFile: "/var/log/zabbix/zabbix_agentd.log"
+zabbix_agent_LogFileSize: "0"
+zabbix_agent_LogRemoteCommands: "0"
+zabbix_agent_MaxLinesPerSecond: "100"
+zabbix_agent_PidFile: "/var/run/zabbix/zabbix_agentd.pid"
+zabbix_agent_RefreshActiveChecks: "120"
+zabbix_agent_Server: "127.0.0.1"
+zabbix_agent_ServerActive: "127.0.0.1"
+zabbix_agent_SourceIP: ~
+zabbix_agent_StartAgents: "3"
+zabbix_agent_Timeout: "3"
+zabbix_agent_UnsafeUserParameters: "0"
+zabbix_agent_User: "zabbix"
+zabbix_agent_UserParameter: ~

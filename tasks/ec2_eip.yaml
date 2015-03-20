@@ -1,0 +1,15 @@
+- hosts: localhost
+  connection: local
+  vars:
+    myhost: tag_Name_Proxy
+  tasks:
+  - name: create ec2_eip
+    action:
+      module: ec2_eip
+      state: present
+      instance_id: "{{ hostvars[host]['ec2_id'] }}"
+      ip: "{{ hostvars[myhost]['ec2_ip_address'] }}"
+    register: eip
+
+  - name: output the IP
+    debug: msg="Allocated IP inside a VPC is {{ eip.public_ip }}"

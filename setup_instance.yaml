@@ -1,0 +1,51 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Configure DockerHosts
+  hosts:
+    - tag_Type_DockerHost
+  sudo: true
+  roles:
+    - docker-host
+
+- name: Configure Redis
+  hosts:
+    - tag_Name_Redis
+  sudo: true
+  roles:
+    - redis-host
+
+- name: Configure Nodejs
+  hosts:
+    - tag_Name_AdminApp
+    - tag_Name_BlogApp
+  sudo: true
+  roles:
+    - nodejs-host
+
+- name: Configure Nginx
+  hosts:
+    - tag_Name_Proxy
+  sudo: true
+  roles:
+    - role: nginx-host
+      nginx_sites:
+        - server:
+            name: admin
+            listen: 80
+            server_name: admin.domain.com
+            location1:
+              name: "/"
+              proxy_pass: "http://10.220.20.20:8080"
+        - server:
+            name: blog
+            listen: 80
+            server_name: blog.domain.com
+            location1:
+              name: "/"
+              proxy_pass: "http://10.220.20.30:8080"
+      nginx_enabled_sites:
+        - admin
+        - blog
+      nginx_disabled_sites:
+        - default

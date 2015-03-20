@@ -1,0 +1,152 @@
+- name: create the security group for Proxy
+  local_action:
+    module: ec2_group
+    name: proxy-sg
+    description: "ansible generated group for Proxy"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 443
+          to_port: 443
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 10.220.20.0/24
+        - proto: tcp
+          from_port: 10050
+          to_port: 10050
+          cidr_ip: 10.220.20.0/24
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: proxy_securitygroup
+
+- name: debug proxy security group
+  debug: "msg='{{ proxy_securitygroup }}'"
+
+
+- name: create the security group for RDS
+  local_action:
+    module: ec2_group
+    name: rds-sg
+    description: "ansible generated group for RDS"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 5432
+          to_port: 5432
+          cidr_ip: 10.220.20.20/32
+        - proto: tcp
+          from_port: 5432
+          to_port: 5432
+          cidr_ip: 10.220.20.30/32
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: rds_securitygroup
+
+- name: debug rds security group
+  debug: "msg='{{ rds_securitygroup }}'"
+
+
+
+- name: create the security group for Redis
+  local_action:
+    module: ec2_group
+    name: redis-sg
+    description: "ansible generated group for Redis"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 6379
+          to_port: 6379
+          cidr_ip: 10.220.20.10/32
+        - proto: tcp
+          from_port: 6379
+          to_port: 6379
+          cidr_ip: 10.220.20.20/32
+        - proto: tcp
+          from_port: 6379
+          to_port: 6379
+          cidr_ip: 10.220.20.30/32
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 10.220.20.0/24
+        - proto: tcp
+          from_port: 10050
+          to_port: 10050
+          cidr_ip: 10.220.20.0/24
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: redis_securitygroup
+
+- name: debug redis security group
+  debug: "msg='{{ redis_securitygroup }}'"
+
+
+- name: create the security group for Apps
+  local_action:
+    module: ec2_group
+    name: apps-sg
+    description: "ansible generated group for Apps"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 8080
+          to_port: 8080
+          cidr_ip: 10.220.20.10/32
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 10.220.20.0/24
+        - proto: tcp
+          from_port: 10050
+          to_port: 10050
+          cidr_ip: 10.220.20.0/24
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: apps_securitygroup
+
+- name: debug Apps security group
+  debug: "msg='{{ apps_securitygroup }}'"
+
+
+- name: create the security group for Monitoring
+  local_action:
+    module: ec2_group
+    name: monitor-sg
+    description: "ansible generated group for Monitoring"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 10051
+          to_port: 10051
+          cidr_ip: 10.220.20.0/24
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: monitor_securitygroup
+
+- name: debug Apps security group
+  debug: "msg='{{ monitor_securitygroup }}'"

@@ -1,0 +1,5 @@
+---
+# Start Redis in Docker container
+
+- name: Start Redis in Docker container
+  docker: image=redis ports=6379:6379

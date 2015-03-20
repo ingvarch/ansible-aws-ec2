@@ -1,0 +1,31 @@
+#- name: search for an ami image
+#  ec2_ami_search: >
+#    region={{ region|default('us-east-1') }}
+#    store={{ store|default('ebs') }}
+#    virt={{ virt|default('hvm') }}
+#    distro={{ distro|default('ubuntu') }}
+#    release={{ release|default('precise') }}
+#  register: ami_data
+
+#- name: debug ami image
+#  debug: 'msg="{{ ami_data }}"'
+
+- name: start the ec2 instance
+  local_action:
+    module: ec2
+    key_name: "{{ keypair|default('mykey') }}"
+    group: "{{ securitygroup|default('mygroup') }}"
+    instance_type: "{{ instancetype|default('t2.micro')}}"
+    image: "{{ image|default('ami-146e2a7c') }}"
+    region: "{{ region|default('us-east-1') }}"
+    assign_public_ip: "{{ assign_public_ip|default('no') }}"
+    vpc_subnet_id: "{{ vpc_data.subnets[1].id }}"
+    private_ip: "{{ private_ip }}"
+    wait: no
+    instance_tags:
+        Name: "{{ name|default('myinstance')}}"
+        Type: "{{ type|default('cloud_server')}}"
+  register: instance_data
+
+- name: debug instance start
+  debug: 'msg="{{instance_data }}"'

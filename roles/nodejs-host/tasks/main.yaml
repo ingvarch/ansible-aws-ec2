@@ -1,0 +1,5 @@
+---
+# Start Nodejs in Docker container
+
+- name: Start Nodejs in Docker container
+  docker: image=google/nodejs-hello ports=8080:8080

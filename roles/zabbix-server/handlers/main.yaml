@@ -1,0 +1,11 @@
+- name: restart zabbix-server
+  sudo: yes
+  service:
+    name: zabbix-server
+    state: restarted
+
+- name: restart httpd
+  sudo: yes
+  service:
+    name: httpd
+    state: restarted

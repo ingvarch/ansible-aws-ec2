@@ -1,0 +1,36 @@
+- name: start the rds_subnet
+  local_action:
+    module: rds_subnet_group
+    state: present
+    name: "{{ rds_subnet_name|default('rds_subnet') }}"
+    description: RDS subnet
+    region: "{{ region|default('us-east-1') }}"
+    subnets:
+      - "{{ vpc_data.subnets[0].id }}"
+      - "{{ vpc_data.subnets[1].id }}"
+  register: rds_subnet_data
+
+- name: debug create rds_subnet_data
+  debug: msg="{{ rds_subnet_data }}"
+
+
+
+- name: start the RDS instance
+  local_action:
+    module: rds
+    command: create
+    region: "{{ region|default('us-east-1') }}"
+    instance_name: "{{ name|default('new-database') }}"
+    db_engine: "{{ db_engine|default('postgres') }}"
+    size: "{{ size|default('10') }}"
+    port: 5432
+    instance_type: "{{ type|default('db.t2.micro') }}"
+    db_name: "{{ db_name|default('my_db_name') }}"
+    username: "{{ username|default('myroot') }}"
+    password: "{{ password|default('MyPa$$0rd') }}"
+    subnet: "{{ rds_subnet_name|default('rds_subnet') }}"
+    vpc_security_groups: "{{ rds_securitygroup.group_id }}"
+  register: rds_data
+
+- name: debug create rds
+  debug: msg="{{ rds_data }}"

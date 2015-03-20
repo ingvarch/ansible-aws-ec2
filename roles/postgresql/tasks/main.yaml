@@ -1,0 +1,4 @@
+- include: install.yaml
+- include: configure.yaml
+- include: databases.yaml
+- include: users.yaml

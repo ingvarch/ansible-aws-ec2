@@ -1,0 +1,6 @@
+- name: Add zabbix repository
+  yum:
+    name: "{{ zabbix_release_rpm_url }}"
+    state: present
+  sudo: yes
+

@@ -1,0 +1,13 @@
+---
+# Install pip, docker-py & docker on YUM based OS
+- name: Install PIP
+  easy_install: name=pip
+
+- name: Install Docker-py
+  pip: name=Docker-py
+
+- name: install the latest version of Redis
+  yum: name=docker state=present
+
+- name: Start Docker
+  service: name=docker state=started

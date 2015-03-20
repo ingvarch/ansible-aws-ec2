@@ -1,0 +1,49 @@
+
+- name: Configure Monitoring
+  hosts:
+    - tag_Name_Monitor
+  sudo: true
+  roles:
+    - role: postgresql
+      postgresql_version: 93
+      postgresql_encoding: 'UTF-8'
+      postgresql_locale: 'en_US.UTF-8'
+
+      postgresql_directory: "/var/lib/pgsql93"
+      postgresql_unix_socket_directories:
+        - /var/run/postgresql
+
+      postgresql_admin_user: "postgres"
+      postgresql_default_auth_method: "trust"
+
+      postgresql_users:
+        - name: zabbix_user
+          pass: Za661x
+          encrypted: no
+
+      postgresql_databases:
+        - name: zabbix_db
+
+      postgresql_user_privileges:
+        - name: zabbix_user
+          db: zabbix_db
+          priv: "ALL"
+
+
+- name: Install Zabbix
+  hosts: tag_Name_Monitor
+  sudo: true
+  roles:
+     - role: zabbix-server
+
+- name: Install Zabbix-agents
+  hosts:
+    - tag_Name_Redis
+    - tag_Name_Proxy
+    - tag_Name_BlogApp
+    - tag_Name_AdminApp
+  sudo: true
+  roles:
+     - role: zabbix-agent
+       zabbix_agent_Server: 10.220.20.40
+       zabbix_agent_ServerActive: 10.220.20.40

@@ -1,0 +1,37 @@
+# Config file for PostgreSQL
+
+- name: Configure | Update init script - (/etc/init.d/postgresql93)
+  template:
+    src: postgresql93_init.j2
+    dest: "/etc/init.d/postgresql93"
+    mode: 0755
+
+
+- name: Config | Create the cluster
+  command: service postgresql{{postgresql_version}} initdb {{postgresql_cluster_name}}
+  notify: restart postgresql
+
+- name: Configure | Update configuration - (pg_hba.conf)
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{postgresql_conf_directory}}/pg_hba.conf"
+    owner: "{{postgresql_admin_user}}"
+    group: "{{postgresql_admin_user}}"
+    mode: 0640
+  notify:
+    - reload postgresql
+
+- name: Configure | Update configuration - (postgresql.conf)
+  template:
+    src: postgresql.conf.j2
+    dest: "{{postgresql_conf_directory}}/postgresql.conf"
+    owner: "{{postgresql_admin_user}}"
+    group: "{{postgresql_admin_user}}"
+    mode: 0640
+  notify:
+    - reload postgresql
+
+- name: Ensure PostgreSQL is running
+  service: name=postgresql{{ postgresql_version }} state=started enabled=yes
+  notify:
+    - restart postgresql
