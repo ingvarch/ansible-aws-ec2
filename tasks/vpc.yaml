@@ -25,3 +25,9 @@
 
 - name: debug vpc
   debug: "msg='{{ vpc_data }}'"
+
+- name: Find subnet_id in us-east-1a and resourse_tags_Name - web_subnet
+  set_fact:
+    web_subnet_id: "{{ item.id }}"
+  when: item['resource_tags']['Name'] == 'web_subnet' and item['az'] == 'us-east-1a'
+  with_items: vpc_data['subnets']

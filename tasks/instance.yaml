@@ -12,14 +12,14 @@
 
 - name: start the ec2 instance
   local_action:
-    module: ec2
+    name: ec2
     key_name: "{{ keypair|default('mykey') }}"
     group: "{{ securitygroup|default('mygroup') }}"
     instance_type: "{{ instancetype|default('t2.micro')}}"
     image: "{{ image|default('ami-146e2a7c') }}"
     region: "{{ region|default('us-east-1') }}"
     assign_public_ip: "{{ assign_public_ip|default('no') }}"
-    vpc_subnet_id: "{{ vpc_data.subnets[1].id }}"
+    vpc_subnet_id: "{{ web_subnet_id }}"
     private_ip: "{{ private_ip }}"
     wait: no
     instance_tags:
