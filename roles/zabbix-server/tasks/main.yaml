@@ -52,6 +52,12 @@
   shell: zabbix_server_pgsql --version | awk '/Zabbix/{ sub(/v/, "", $3); print $3 }'
   register: installed_version
 
+- name: Copy zabbix gui files to zabbix_html_path
+  sudo: yes
+  command: >
+    cp -R /usr/share/zabbix /var/www/html/
+  notify: restart httpd
+
 - name: Make sure the zabbix_html_path directory exists
   file:
     path: "{{ zabbix_html_path }}"
@@ -60,19 +66,6 @@
     mode: 0755
     recurse: yes
     state: directory
-
-
-- name: Copy zabbix gui files to zabbix_html_path
-  sudo: yes
-  copy:
-    src: /usr/share/zabbix/
-    dest: "{{ zabbix_html_path }}"
-    directory_mode: yes
-    owner: apache
-    group: apache
-    mode: 0755
-    directory_mode: 0755
-  notify: restart httpd
 
 - name: migration zabbix database
   command: >

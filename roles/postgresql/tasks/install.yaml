@@ -1,7 +1,7 @@
 # install file for PostgreSQL
 
 - name: Install | Make sure dependencies are installed
-  yum: name=python-psycopg2 state=present
+  yum: name=python26-psycopg2 state=present
 
 
 - name: Install | Add PostgreSQL repository
