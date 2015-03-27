@@ -11,8 +11,7 @@
 #  debug: 'msg="{{ ami_data }}"'
 
 - name: start the ec2 instance
-  local_action:
-    name: ec2
+  ec2:
     key_name: "{{ keypair|default('mykey') }}"
     group: "{{ securitygroup|default('mygroup') }}"
     instance_type: "{{ instancetype|default('t2.micro')}}"

@@ -1,6 +1,5 @@
 - name: start the rds_subnet
-  local_action:
-    module: rds_subnet_group
+  rds_subnet_group:
     state: present
     name: "{{ rds_subnet_name|default('rds_subnet') }}"
     description: RDS subnet
@@ -16,8 +15,7 @@
 
 
 - name: start the RDS instance
-  local_action:
-    module: rds
+  rds:
     command: create
     region: "{{ region|default('us-east-1') }}"
     instance_name: "{{ name|default('new-database') }}"

@@ -1,6 +1,5 @@
 - name: create vpc
-  local_action:
-    module: ec2_vpc
+  ec2_vpc:
     state: present
     cidr_block: 10.220.0.0/16
     resource_tags: { "Name":"prod_vpc" }

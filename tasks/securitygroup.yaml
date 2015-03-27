@@ -1,6 +1,5 @@
 - name: create the security group for Proxy
-  local_action:
-    module: ec2_group
+  ec2_group:
     name: proxy-sg
     description: "ansible generated group for Proxy"
     region: "{{ region|default('us-east-1') }}"
@@ -32,8 +31,7 @@
 
 
 - name: create the security group for RDS
-  local_action:
-    module: ec2_group
+  ec2_group:
     name: rds-sg
     description: "ansible generated group for RDS"
     region: "{{ region|default('us-east-1') }}"
@@ -58,8 +56,7 @@
 
 
 - name: create the security group for Redis
-  local_action:
-    module: ec2_group
+  ec2_group:
     name: redis-sg
     description: "ansible generated group for Redis"
     region: "{{ region|default('us-east-1') }}"
@@ -95,8 +92,7 @@
 
 
 - name: create the security group for Apps
-  local_action:
-    module: ec2_group
+  ec2_group:
     name: apps-sg
     description: "ansible generated group for Apps"
     region: "{{ region|default('us-east-1') }}"
@@ -124,8 +120,7 @@
 
 
 - name: create the security group for Monitoring
-  local_action:
-    module: ec2_group
+  ec2_group:
     name: monitor-sg
     description: "ansible generated group for Monitoring"
     region: "{{ region|default('us-east-1') }}"
