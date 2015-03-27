@@ -37,13 +37,6 @@ vi ansible-aws-ec2/ansible.cfg
 ansible-playbook -i inventory provision_instance.yaml
 ```
 
-После того, как машинки развернуться, доступ к ним будет доступен только
-через сервер который tag_Name_Monitor.
-
-Необходимо на него установить git, pip, скопировать созданный ключ
-ansible-aws-ec2/keys и повторить Шаги 1-4
-(todo: pre_setup_instance.yaml с этими действиями)
-
 #### Шаг 6.1. Перечитать кэш для ec2.py
 
 ```
@@ -69,6 +62,5 @@ ansible-playbook -i inventory monitor_instance.yaml
 
 #### TODO:
 
-1. в tasks/instance.yaml есть строчка vpc_subnet_id: "{{ vpc_data.subnets[1].id }}" разобраться с тем как передавать нужный vpc_id.subnet так как каждый раз он подтягивает разный, а их два
-2. Скрипты для pre_setup_instance.yaml и добавление заббикс агентов на сервер
-3. Динамические private_ip
+1. Скрипты для pre_setup_instance.yaml и добавление заббикс агентов на сервер
+2. Динамические private_ip
