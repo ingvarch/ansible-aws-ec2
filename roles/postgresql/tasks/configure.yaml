@@ -7,9 +7,31 @@
     mode: 0755
 
 
-- name: Config | Create the cluster
+- name: Config | Stop the Cluster
+  command: service postgresql{{postgresql_version}} stop
+  when: remove_cluster
+
+- name: Config | Remove the cluster
+  shell: rm -rf {{ postgresql_directory }}
+  when: remove_cluster
+
+- name: Config | Create the cluster if need to remove
   command: service postgresql{{postgresql_version}} initdb {{postgresql_cluster_name}}
   notify: restart postgresql
+  when: remove_cluster
+
+- name: Config | Check postgresql_directory exist
+  stat: path={{ postgresql_directory }}/{{ postgresql_cluster_name }}/base
+  register: data_dir
+
+- name: trolololo
+  debug: msg="{{ data_dir }}"
+
+- name: Initialise Postgresql Database if it is not
+  command: service postgresql{{postgresql_version}} initdb {{postgresql_cluster_name}}
+  notify: restart postgresql
+  when: data_dir.stat.exists == false
+
 
 - name: Configure | Update configuration - (pg_hba.conf)
   template:

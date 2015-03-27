@@ -16,6 +16,8 @@
       postgresql_admin_user: "postgres"
       postgresql_default_auth_method: "trust"
 
+      remove_cluster: false
+
       postgresql_users:
         - name: zabbix_user
           pass: Za661x
