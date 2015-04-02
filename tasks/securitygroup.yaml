@@ -1,6 +1,6 @@
 - name: create the security group for Proxy
   ec2_group:
-    name: proxy-sg
+    name: Proxy-sg
     description: "ansible generated group for Proxy"
     region: "{{ region|default('us-east-1') }}"
     vpc_id: "{{ vpc_data.vpc_id }}"
@@ -32,7 +32,7 @@
 
 - name: create the security group for RDS
   ec2_group:
-    name: rds-sg
+    name: RDS-sg
     description: "ansible generated group for RDS"
     region: "{{ region|default('us-east-1') }}"
     vpc_id: "{{ vpc_data.vpc_id }}"
@@ -40,11 +40,13 @@
         - proto: tcp
           from_port: 5432
           to_port: 5432
-          cidr_ip: 10.220.20.20/32
+          group_name: AdminApp
+          group_desc: "Address of AdminApp"
         - proto: tcp
           from_port: 5432
           to_port: 5432
-          cidr_ip: 10.220.20.30/32
+          group_name: BlogApp
+          group_desc: "Address of BlogApp"
     rules_egress:
         - proto: all
           cidr_ip: "0.0.0.0/0"
@@ -57,7 +59,7 @@
 
 - name: create the security group for Redis
   ec2_group:
-    name: redis-sg
+    name: Redis-sg
     description: "ansible generated group for Redis"
     region: "{{ region|default('us-east-1') }}"
     vpc_id: "{{ vpc_data.vpc_id }}"
@@ -65,15 +67,18 @@
         - proto: tcp
           from_port: 6379
           to_port: 6379
-          cidr_ip: 10.220.20.10/32
+          group_name: Proxy
+          group_desc: "Address of Proxy"
         - proto: tcp
           from_port: 6379
           to_port: 6379
-          cidr_ip: 10.220.20.20/32
+          group_name: AdminApp
+          group_desc: "Address of AdminApp"
         - proto: tcp
           from_port: 6379
           to_port: 6379
-          cidr_ip: 10.220.20.30/32
+          group_name: BlogApp
+          group_desc: "Address of BlogApp"
         - proto: tcp
           from_port: 22
           to_port: 22
@@ -91,17 +96,18 @@
   debug: "msg='{{ redis_securitygroup }}'"
 
 
-- name: create the security group for Apps
+- name: create the security group for AdminApp
   ec2_group:
-    name: apps-sg
-    description: "ansible generated group for Apps"
+    name: AdminApp-sg
+    description: "ansible generated group for AdminApp"
     region: "{{ region|default('us-east-1') }}"
     vpc_id: "{{ vpc_data.vpc_id }}"
     rules:
         - proto: tcp
           from_port: 8080
           to_port: 8080
-          cidr_ip: 10.220.20.10/32
+          group_name: Proxy
+          group_desc: "Address of Proxy"
         - proto: tcp
           from_port: 22
           to_port: 22
@@ -113,10 +119,38 @@
     rules_egress:
         - proto: all
           cidr_ip: "0.0.0.0/0"
-  register: apps_securitygroup
+  register: admin_securitygroup
 
 - name: debug Apps security group
-  debug: "msg='{{ apps_securitygroup }}'"
+  debug: "msg='{{ admin_securitygroup }}'"
+
+- name: create the security group for BlogApp
+  ec2_group:
+    name: BlogApp-sg
+    description: "ansible generated group for BlogApp"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 8080
+          to_port: 8080
+          group_name: Proxy
+          group_desc: "Address of Proxy"
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 10050
+          to_port: 10050
+          cidr_ip: 10.220.20.0/24
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: blog_securitygroup
+
+- name: debug Apps security group
+  debug: "msg='{{ blog_securitygroup }}'"
 
 
 - name: create the security group for Monitoring

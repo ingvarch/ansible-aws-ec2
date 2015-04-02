@@ -10,21 +10,44 @@
 #- name: debug ami image
 #  debug: 'msg="{{ ami_data }}"'
 
-- name: start the ec2 instance
+- name: start the ec2 instances
   ec2:
     key_name: "{{ keypair|default('mykey') }}"
-    group: "{{ securitygroup|default('mygroup') }}"
-    instance_type: "{{ instancetype|default('t2.micro')}}"
+    group: "{{ item.name }}-sg"
+    instance_type: "{{ item.instance_type|default('t2.micro')}}"
     image: "{{ image|default('ami-146e2a7c') }}"
     region: "{{ region|default('us-east-1') }}"
-    assign_public_ip: "{{ assign_public_ip|default('no') }}"
+    assign_public_ip: yes
     vpc_subnet_id: "{{ web_subnet_id }}"
-    private_ip: "{{ private_ip }}"
-    wait: no
+    wait: yes
+    exact_count: 1
+    count_tag:
+      Name: "{{ item.name }}"
     instance_tags:
-        Name: "{{ name|default('myinstance')}}"
-        Type: "{{ type|default('cloud_server')}}"
-  register: instance_data
+        Name: "{{ item.name|default('myinstance')}}"
+        Type: "{{ item.type|default('cloud_server')}}"
+  with_items:
+    - name: Proxy
+      instance_type: t2.micro
+    - name: Monitor
+      instance_type: t2.micro
+    - name: Redis
+      instance_type: t2.micro
+      type: DockerHost
+    - name: AdminApp
+      instance_type: t2.micro
+      type: DockerHost
+    - name: BlogApp
+      instance_type: t2.micro
+      type: DockerHost
+  register: ec2
 
-- name: debug instance start
-  debug: 'msg="{{instance_data }}"'
+- name: debug ec2 start
+  debug: 'msg="{{ ec2 }}"'
+
+
+- name: Add all instance public IPs to host group
+  add_host:
+    hostname: "{{ item.tagged_instances[0].public_ip }}"
+    groups: "tag_Name_{{ item.item.name }}"
+  with_items: ec2.results

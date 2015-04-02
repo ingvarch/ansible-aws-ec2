@@ -7,11 +7,7 @@
   tasks:
 
      - include: tasks/vpc.yaml
-     - include: tasks/keypair.yaml name="priv_key" force_keypair=True
+     - include: tasks/keypair.yaml name="priv_key"
      - include: tasks/securitygroup.yaml
+     - include: tasks/instance.yaml keypair="priv_key"
      - include: tasks/rds.yaml name="RDS"
-     - include: tasks/instance.yaml name="Proxy" securitygroup="proxy-sg" keypair="priv_key" private_ip="10.220.20.10" assign_public_ip="yes"
-     - include: tasks/instance.yaml name="Monitor" securitygroup="monitor-sg" keypair="priv_key" private_ip="10.220.20.40" assign_public_ip="yes"
-     - include: tasks/instance.yaml name="Redis" type="DockerHost" securitygroup="redis-sg" keypair="priv_key" private_ip="10.220.20.50" assign_public_ip="yes"
-     - include: tasks/instance.yaml name="AdminApp" type="DockerHost" securitygroup="apps-sg" keypair="priv_key" private_ip="10.220.20.20" assign_public_ip="yes"
-     - include: tasks/instance.yaml name="BlogApp" type="DockerHost" securitygroup="apps-sg" keypair="priv_key" private_ip="10.220.20.30" assign_public_ip="yes"
