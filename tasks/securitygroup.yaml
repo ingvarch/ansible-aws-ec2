@@ -1,3 +1,23 @@
+- name: create the common security group
+  ec2_group:
+    name: Common-sg
+    description: "ansible generated common group"
+    region: "{{ region|default('us-east-1') }}"
+    vpc_id: "{{ vpc_data.vpc_id }}"
+    rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+    rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+  register: common_securitygroup
+
+- name: debug common security group
+  debug: "msg='{{ common_securitygroup }}'"
+
+
 - name: create the security group for Proxy
   ec2_group:
     name: Proxy-sg
@@ -12,10 +32,6 @@
         - proto: tcp
           from_port: 443
           to_port: 443
-          cidr_ip: 0.0.0.0/0
-        - proto: tcp
-          from_port: 22
-          to_port: 22
           cidr_ip: 0.0.0.0/0
         - proto: tcp
           from_port: 10050
@@ -40,13 +56,13 @@
         - proto: tcp
           from_port: 5432
           to_port: 5432
-          group_name: AdminApp
-          group_desc: "Address of AdminApp"
+          group_name: AdminApp-sg
+          group_desc: For AdminApp
         - proto: tcp
           from_port: 5432
           to_port: 5432
-          group_name: BlogApp
-          group_desc: "Address of BlogApp"
+          group_name: BlogApp-sg
+          group_desc: For BlogApp
     rules_egress:
         - proto: all
           cidr_ip: "0.0.0.0/0"
@@ -54,7 +70,6 @@
 
 - name: debug rds security group
   debug: "msg='{{ rds_securitygroup }}'"
-
 
 
 - name: create the security group for Redis
@@ -67,22 +82,8 @@
         - proto: tcp
           from_port: 6379
           to_port: 6379
-          group_name: Proxy
-          group_desc: "Address of Proxy"
-        - proto: tcp
-          from_port: 6379
-          to_port: 6379
-          group_name: AdminApp
-          group_desc: "Address of AdminApp"
-        - proto: tcp
-          from_port: 6379
-          to_port: 6379
-          group_name: BlogApp
-          group_desc: "Address of BlogApp"
-        - proto: tcp
-          from_port: 22
-          to_port: 22
-          cidr_ip: 0.0.0.0/0
+          group_name: Proxy-sg
+          group_desc: For Proxy-sg
         - proto: tcp
           from_port: 10050
           to_port: 10050
@@ -95,7 +96,6 @@
 - name: debug redis security group
   debug: "msg='{{ redis_securitygroup }}'"
 
-
 - name: create the security group for AdminApp
   ec2_group:
     name: AdminApp-sg
@@ -106,12 +106,8 @@
         - proto: tcp
           from_port: 8080
           to_port: 8080
-          group_name: Proxy
-          group_desc: "Address of Proxy"
-        - proto: tcp
-          from_port: 22
-          to_port: 22
-          cidr_ip: 0.0.0.0/0
+          group_name: Proxy-sg
+          group_desc: For Proxy-sg
         - proto: tcp
           from_port: 10050
           to_port: 10050
@@ -134,12 +130,8 @@
         - proto: tcp
           from_port: 8080
           to_port: 8080
-          group_name: Proxy
-          group_desc: "Address of Proxy"
-        - proto: tcp
-          from_port: 22
-          to_port: 22
-          cidr_ip: 0.0.0.0/0
+          group_name: Proxy-sg
+          group_desc: For Proxy-sg
         - proto: tcp
           from_port: 10050
           to_port: 10050
@@ -155,7 +147,7 @@
 
 - name: create the security group for Monitoring
   ec2_group:
-    name: monitor-sg
+    name: Monitor-sg
     description: "ansible generated group for Monitoring"
     region: "{{ region|default('us-east-1') }}"
     vpc_id: "{{ vpc_data.vpc_id }}"
@@ -163,10 +155,6 @@
         - proto: tcp
           from_port: 80
           to_port: 80
-          cidr_ip: 0.0.0.0/0
-        - proto: tcp
-          from_port: 22
-          to_port: 22
           cidr_ip: 0.0.0.0/0
         - proto: tcp
           from_port: 10051

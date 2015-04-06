@@ -13,7 +13,7 @@
 - name: start the ec2 instances
   ec2:
     key_name: "{{ keypair|default('mykey') }}"
-    group: "{{ item.name }}-sg"
+    group: ['Common-sg','{{ item.name }}-sg']
     instance_type: "{{ item.instance_type|default('t2.micro')}}"
     image: "{{ image|default('ami-146e2a7c') }}"
     region: "{{ region|default('us-east-1') }}"
