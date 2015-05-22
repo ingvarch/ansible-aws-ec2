@@ -7,7 +7,7 @@
   tasks:
 
      - include: tasks/vpc.yaml
-     - include: tasks/keypair.yaml name="priv_key"
-     - include: tasks/securitygroup.yaml
-     - include: tasks/instance.yaml keypair="priv_key"
-     - include: tasks/rds.yaml name="RDS"
+     #- include: tasks/keypair.yaml name="priv_key"
+     #- include: tasks/securitygroup.yaml
+     #- include: tasks/instance.yaml keypair="priv_key"
+     #- include: tasks/rds.yaml name="RDS"
