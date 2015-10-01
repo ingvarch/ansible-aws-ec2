@@ -1,5 +1,9 @@
 #!/usr/bin/env ansible-playbook
----
+- hosts: tag_Name_BlogApp
+  tasks: []
+
+- hosts: tag_Name_AdminApp
+  tasks: []
 
 - name: Configure DockerHosts
   hosts:
@@ -36,14 +40,14 @@
             server_name: admin.domain.com
             location1:
               name: "/"
-              proxy_pass: "http://10.220.20.20:8080"
+              proxy_pass: "http://{{ hostvars[groups['tag_Name_AdminApp'][0]]['ec2_private_ip_address'] }}:8080"
         - server:
             name: blog
             listen: 80
             server_name: blog.domain.com
             location1:
               name: "/"
-              proxy_pass: "http://10.220.20.30:8080"
+              proxy_pass: "http://{{ hostvars[groups['tag_Name_BlogApp'][0]]['ec2_private_ip_address'] }}:8080"
       nginx_enabled_sites:
         - admin
         - blog

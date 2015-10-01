@@ -1,3 +1,5 @@
+- hosts: tag_Name_Monitor
+  tasks: []
 
 - name: Configure Monitoring
   hosts:
@@ -47,5 +49,5 @@
   sudo: true
   roles:
      - role: zabbix-agent
-       zabbix_agent_Server: 10.220.20.40
-       zabbix_agent_ServerActive: 10.220.20.40
+       zabbix_agent_Server: "{{ hostvars[groups['tag_Name_Monitor'][0]]['ec2_private_ip_address'] }}"
+       zabbix_agent_ServerActive: "{{ hostvars[groups['tag_Name_Monitor'][0]]['ec2_private_ip_address'] }}"
